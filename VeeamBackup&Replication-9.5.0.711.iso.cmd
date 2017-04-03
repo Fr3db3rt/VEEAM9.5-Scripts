@@ -5,7 +5,7 @@ echo %0 %PSscript%
 more +9 %0 | %PSscript%
 cmd /c pause
 exit /b
-
+### Memo: https://blog.jourdant.me/post/3-ways-to-download-files-with-powershell
 ### PowerShell script starts here ###
 Write-Host -fore green "Starte PowerShell...`n`n`n`n" 
 Write-Host -fore green "VEEAM Update Downloader with BITS for VeeamBackup&Replication_9.5.0.711.iso..."
