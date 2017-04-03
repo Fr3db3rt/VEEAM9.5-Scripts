@@ -2,11 +2,12 @@
 set PScmd=%0
 set PSscript=PowerShell -NoProfile -ExecutionPolicy Bypass -Command -
 echo %0 %PSscript%
-more +8 %0 | %PSscript%
+more +9 %0 | %PSscript%
+cmd /c pause
 exit /b
 
 ### PowerShell script starts here ###
-Write-Host -fore green "Starte PowerShell..." 
+Write-Host -fore green "Starte PowerShell...`n`n`n`n" 
 Write-Host -fore green "VEEAM Update Downloader with BITS for VeeamBackup&Replication_9.5.0.711.iso..."
 $msg = "Info: VEEAM Version 9.x script execution - "
 $msg += $env:PScmd
@@ -20,31 +21,24 @@ Write-EventLog -LogName "Application" -Source "VEEAM Scripts" -EventID 65535 -En
 # .........................................
 
 # Definitions ...
-# Origin source: https://dataspace.xxx.de/#/public/shares-downloads/51B1v2phMU1Ghl96cXyXuq90TJGyWitF
-$source = "https://dataspace.xxx.de/api/v4/public/shares/downloads/51B1v2phMU1Ghl96cXyXuq90TJGyWitF/LzD68Bj3jbUzSS5Xcpm79rqsQFQtR-lfZ0B92NCxNoZJY6LTiz-oFQ83_mPBTXOI0oNQ_SUWquMbmWI1iILfBnWsnxUQIIZmZyk6_4n485lethOdYeDRikG-ITqk0Cjq4EZBK1vUFmNB6nsow0QMTFj15t1uEQladfb9MnI0k4Pptoob8xH0mjTJ0553efde6fe2c2e1"
+# Origin source: https://dataspace.livingdata.de/#/public/shares-downloads/51B1v2phMU1Ghl96cXyXuq90TJGyWitF
+$source = "https://dataspace.livingdata.de/api/v4/public/shares/downloads/51B1v2phMU1Ghl96cXyXuq90TJGyWitF/LzD68Bj3jbUzSS5Xcpm79rqsQFQtR-lfZ0B92NCxNoZJY6LTiz-oFQ83_mPBTXOI0oNQ_SUWquMbmWI1iILfBnWsnxUQIIZmZyk6_4n485lethOdYeDRikG-ITqk0Cjq4EZBK1vUFmNB6nsow0QMTFj15t1uEQladfb9MnI0k4Pptoob8xH0mjTJ0553efde6fe2c2e1"
 $destinationfile = "VeeamBackup&Replication_9.5.0.711.iso"
 $destinationpath = "c:\scripts\updates\"
 $destination = $destinationpath + $destinationfile
+write-host -fore green "--- SOURCE: ---------------------------------------------------------------------------"
 write-host $source
+write-host -fore green "--- DESTINATIONFILE: ------------------------------------------------------------------"
 write-host $destinationfile
+write-host -fore green "--- DESTINATIONPATH: ------------------------------------------------------------------"
 write-host $destinationpath
+write-host -fore green "--- DESTINATION: ----------------------------------------------------------------------"
 write-host $destination
+write-host -fore green "---------------------------------------------------------------------------------------`n"
 write-host ""
-# ...........
 
-# Download ...
-write-host -fore green "Import-Module BitsTransfer"
-Import-Module BitsTransfer
-
-write-host -fore green "Start-BitsTransfer -Source $source -Destination $destination -Description "Downloading..." -DisplayName "by BitsTransfer" -ProxyUsage SystemDefault -Priority Foreground -RetryInterval 120"
-Start-BitsTransfer -Source $source -Destination $destination -Description "Downloading..." -DisplayName "by BitsTransfer" -ProxyUsage SystemDefault -Priority Foreground -RetryInterval 120
-# -Asynchronous
-#
-Get-BitsTransfer | Resume-BitsTransfer
-Get-BitsTransfer | Complete-BitsTransfer
-Get-BitsTransfer
-write-host -fore green "Download finished"
-# ............
+write-host -fore green "wget $source -outfile $destination"
+wget $source -outfile $destination
 
 # Zip and/or Unzip ...
 Add-Type -A System.IO.Compression.FileSystem
